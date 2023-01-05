@@ -1,9 +1,9 @@
 {
-  "name": "matrix-ui-plugin-boilerplate-24",
+  "name": "broccoli-is-fine-plugin",
   "version": "1.0.1",
-  "description": "Awesome matrix-ui-plugin-boilerplate for the 2.4 tree created by mike",
+  "description": "Awesome plugin for the 2.4 tree created by Mike and Iunia",
   "repository": {
-    "url": "https://github.com/MatrixRequirements/matrix-ui-plugin-boilerplate-24"
+    "url": "https://github.com/MatrixRequirements/legendary-broccoli"
   },
   "targets": {
     "default": {

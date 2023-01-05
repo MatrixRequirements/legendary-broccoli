@@ -1,11 +1,7 @@
 /// <reference types="matrixrequirements-type-declarations" />
 /// <reference types="matrix-requirements-api" />
 
-import { Control } from "./Control";
 import { DashboardPage } from "./DashboardPage";
-import { ProjectSettingsPage } from "./ProjectSettingsPage";
-import { ServerSettingsPage } from "./ServerSettingsPage";
-import { Tool } from "./Tools";
 
 /** This class is allows you to configure the features of your plugin.
  * 
@@ -26,48 +22,37 @@ export class Plugin implements matrixApi.IExternalPlugin {
             The page itself is implemented in the _ServerSettingsPage.ts 
         */
         customerSettingsPage: {
-            id: "BPPCustomerSettings",
-            title: "BPP customer settings page",
-            type: "BPPcs",
-            enabled: true,
-            defaultSettings: {
-                myServerSetting: "default value for setting defined in Interfaces.ts",
-            },
-            settingName: "BPP_settings",
-            help: "This is my help text",
-            helpUrl:"https://docs23.matrixreq.com"
+            id: "",
+            title: "",
+            type: "",
+            enabled: false,
+            settingName: "",
         },
         /*  Page in admin client to configure settings for one specific project - set enabled to false if not needed.
             The page itself is implemented in the _ProjectSetingsPage.ts 
         */
         projectSettingsPage: {
-            id: "BPPprojectsettings",
-            title: "BPP projectsettings page",
-            type:"BPPps",
-            enabled: true,
-            defaultSettings: {
-                myProjectSetting:  "default value for setting defined in Interfaces.ts",
-            },
-            settingName: "BPP_settings",
-            help: "This is my help text",
-            helpUrl:"https://docs23.matrixreq.com"
+            id: "",
+            title: "",
+            type: "",
+            enabled: false,
+            settingName: "",
         },
         /*  Add an entry in the tool menu of an item or folder - set enabled to false if not needed.
             The tool itself is implemented in the _Tool.ts 
         */
         menuToolItem: {
-            enabled: true,
-            title:"matrix-ui-plugin-boilerplate-menuitem",
+            enabled: false,
+            title: "",
         },
         /*  Add a custom field to enter some data in the UI - set enabled to false if not needed.
             The field itself is implemented in the _Control.ts 
         */
         field: {
-            enabled: true,
-            fieldType: "matrix-ui-plugin-boilerplate",
-            title: "matrix-ui-plugin-boilerplate-field",
+            enabled: false,
+            fieldType: "",
             fieldConfigOptions: {
-                id: "matrix-ui-plugin-boilerplate",
+                id: "",
                 capabilities: {
                     canBePublished: false,
                     canBeReadonly: true,
@@ -78,16 +63,15 @@ export class Plugin implements matrixApi.IExternalPlugin {
                 },
                 class: "",
                 help: "",
-                label: "matrix-ui-plugin-boilerplate-field",
+                label: "",
             }
         },
         /*  Add a dashboard inside a project - set enabled to false if not needed.
             The field itself is implemented in the _Control.ts 
         */
         dashboard: {        
-            
-            id:"BPP",
-            title: "BPP dashboard page",
+            id: "CHANGE_VISUALIZATION",
+            title: "Changes Dashboard Page",
             enabled: true,
             icon: "fal fa-cog",
             parent: "DASHBOARDS",
@@ -112,57 +96,26 @@ export class Plugin implements matrixApi.IExternalPlugin {
         return new DashboardPage();
     }
     getProjectSettingsPage(): matrixApi.IPluginSettingPage<matrixApi.IProjectSettingsBase> {
-
-        if (matrixApi.app.isConfigApp()) {
-            return new ProjectSettingsPage(<matrixApi.IConfigApp><unknown>matrixApi.app);
-        }
         return null;
     }
     getServerSettingsPage(): matrixApi.IPluginSettingPage<matrixApi.IServerSettingsBase> {
-        if (matrixApi.app.isConfigApp()) {
-            return new ServerSettingsPage(<matrixApi.IConfigApp><unknown>matrixApi.app);
-        }
         return null;
     }
     getControl(ctrlObj: JQuery): matrixApi.ControlCoreBase {
-        return new Control(Plugin.config, ctrlObj);
+        return null;
     }
     getTool(): matrixApi.ITool {
-        return new Tool();
+        return null;
     }
     getConfig(): matrixApi.IPluginConfig {
         return Plugin.config;
     }
     enableToolMenu(ul: JQuery, _hook: number): boolean {
-        return this.core.enabledInContext;
+        return false;
     }
 
-    /**
-     * This method is called each time  a project has been loaded and initialized. 
-     * At the time it is called, all project settings, categories etc are defined.
-     * 
-     * @param project // id of the loaded project
-     */
-    onInitProject(project:string) {
-
-        // here is a good place to decide based on the project (maybe some project setting), whether the plugin should be enabled 
-        
-        // if not:
-        // this.enabledInContext = false;
-    }
-
-    /** this method is called just before the rendering of an item is done
-    * It is also called when opening the create item dialog.
-    * 
-    * @param _item: the item which is being loaded in the UI 
-    */
-    onInitItem(item: matrixApi.IItem) {
-        
-        // here is a good place to decide based on the selection in the tree, whether the plugin should be enabled 
-        
-        // if not:
-        // this.enabledInContext = false;
-    }
+    onInitProject(project: string) { }
+    onInitItem(item: matrixApi.IItem) { }
 }
 
 declare global {
