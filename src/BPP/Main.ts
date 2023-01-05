@@ -114,7 +114,10 @@ export class Plugin implements matrixApi.IExternalPlugin {
         return false;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     onInitProject(project: string) { }
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     onInitItem(item: matrixApi.IItem) { }
 }
 
