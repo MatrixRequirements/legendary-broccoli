@@ -1,13 +1,9 @@
-import { IProjectSettings } from "./Interfaces";
-import { Plugin } from "./Main";
+type c3DataArray = [string, ...c3.Primitive[]];
 
 // eslint-disable-next-line no-unused-vars
 export class DashboardPage {
-    settings: IProjectSettings;
-
-    constructor() {
-        this.settings = { ...Plugin.config.projectSettingsPage.defaultSettings, ...matrixApi.globalMatrix.ItemConfig.getSettingJSON(Plugin.config.projectSettingsPage.settingName, {}) };
-    }
+    private _root: JQuery;
+    private chart: c3.ChartAPI;
 
     /** Customize static HTML here */
     private getDashboardDOM(): JQuery {
@@ -21,30 +17,35 @@ export class DashboardPage {
     }
 
     private createChart() {
+
+        /** STEP 1: hello world */
+        $("#historyPieChart", this._root).html("hello world");
+
+        /** STEP 2: remove the line above and uncomment this:
+         * 
+         *
         let that = this;
-        let dates: [string, ...c3.Primitive[]] = ['x'];  // "x", "YYYY-MM-DD", ...
-        let changes: [string, ...c3.Primitive[]] = ["changes"];  // "changes", n1, n2, ...
+        let dates: c3DataArray = ['x'];  // "x", "YYYY-MM-DD", ...
+        let changes: c3DataArray = ["changes"];  // "changes", n1, n2, ...
 
         let param = {
             include: matrixApi.globalMatrix.historyFilter
         };
         matrixApi.restConnection.getProject("calendar" + "?" + $.param(param, true)).done(
             function (result: matrixApi.XRGetProject_Calendar_CalendarTypeList) {
-                result.forEach((entry: matrixApi.XRCalendarType) => {
+                for (let entry of result) {
                     dates.push(entry.dateString);
                     changes.push(entry.nbChanges);
-                });
+                }
                 that.initializeChart(dates, changes);
             });
+        */
     }
 
-    private _root: JQuery;
-    private chart: c3.ChartAPI;
 
-    private initializeChart(dates: [string, ...c3.Primitive[]], changes: [string, ...c3.Primitive[]]) {
-        let that = this;
+    private initializeChart(dates: c3DataArray, changes: c3DataArray) {
         const columns = [dates, changes];
-        that.chart = c3.generate({
+        this.chart = c3.generate({
             bindto: $("#historyPieChart", this._root)[0],
             data: {
                 x: 'x',
@@ -79,6 +80,7 @@ export class DashboardPage {
         );
         matrixApi.app.itemForm.append(this._root);
     }
+
     onResize() {
         /* Will be triggered when resizing. */
         this.chart.show();
