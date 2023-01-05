@@ -14,30 +14,73 @@ export class DashboardPage {
         return $(`
     <div class="panel-body-v-scroll fillHeight"> 
         <div class="panel-body">
-            This is my content : ${this.settings.myProjectSetting}
+          <div id="historyPieChart" class="chart"></div>
         </div>
     </div>
     `);
     }
 
+    private createChart() {
+        let that = this;
+        let dates: [string, ...c3.Primitive[]] = ['x'];  // "x", "YYYY-MM-DD", ...
+        let changes: [string, ...c3.Primitive[]] = ["changes"];  // "changes", n1, n2, ...
+
+        let param = {
+            include: matrixApi.globalMatrix.historyFilter
+        };
+        matrixApi.restConnection.getProject("calendar" + "?" + $.param(param, true)).done(
+            function (result: matrixApi.XRGetProject_Calendar_CalendarTypeList) {
+                result.forEach((entry: matrixApi.XRCalendarType) => {
+                    dates.push(entry.dateString);
+                    changes.push(entry.nbChanges);
+                });
+                that.initializeChart(dates, changes);
+            });
+    }
+
+    private _root: JQuery;
+    private chart: c3.ChartAPI;
+
+    private initializeChart(dates: [string, ...c3.Primitive[]], changes: [string, ...c3.Primitive[]]) {
+        let that = this;
+        const columns = [dates, changes];
+        that.chart = c3.generate({
+            bindto: $("#historyPieChart", this._root)[0],
+            data: {
+                x: 'x',
+                columns: columns,
+            },
+            axis: {
+                x: {
+                    type: 'timeseries',
+                    tick: {
+                        format: '%Y-%m-%d'
+                    }
+                }
+            }
+        });
+    }
+
     /** Add interactive element in this function */
     renderProjectPage() {
-
-        const control = this.getDashboardDOM();
+        let that = this;
+        that._root = that.getDashboardDOM();
+        that.createChart();
         matrixApi.app.itemForm.append(
             matrixApi.ml.UI.getPageTitle(
-                this.settings.myProjectSetting,
+                "All changes by date",
                 () => {
-                    return control;
+                    return that._root;
                 },
                 () => {
-                    this.onResize();
+                    that.onResize();
                 }
             )
         );
-        matrixApi.app.itemForm.append(control);
+        matrixApi.app.itemForm.append(this._root);
     }
     onResize() {
         /* Will be triggered when resizing. */
+        this.chart.show();
     }
 }
